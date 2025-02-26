@@ -151,7 +151,7 @@ else:
         st._set_query_params()
         st.rerun()
     if st.session_state.editable_project ==None: 
-        st.session_state.editable_project= get_project_func(base_url="http://127.0.0.1:8000/v1/product-design",project_id=st.session_state.query_parameters)
+        st.session_state.editable_project= get_project_func(base_url=base_url,project_id=st.session_state.query_parameters)
    
     st.title(f"Project {st.session_state.editable_project['name']}")
     st.image(image=st.session_state.editable_project['case_study_image_link'])
