@@ -15,7 +15,6 @@ def get_project_func(base_url,project_id):
     
 
     
-    # Send POST request
     response = requests.get(url, headers=headers)
     
     # Check if the request was successful

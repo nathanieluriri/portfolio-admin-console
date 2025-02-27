@@ -2,11 +2,13 @@ import streamlit as st
 import json 
 import requests
 import tempfile
+import urllib.parse
 from utils.create import create_project_func
 from utils.getProject import get_project_func
 from utils.image_upload import upload_image
 from utils.delete import delete_project_func
 from utils.update import update_project_func
+from utils.contact import get_contact_func,delete_contact_func
 url = 'https://api.uriri.com.ng/v1/product-design/get/projects'
 base_url="https://api.uriri.com.ng/v1/product-design"
 
@@ -43,6 +45,12 @@ if st.session_state.query_parameters == "":
         except:
             st.session_state.project=[]
 
+    if "messages" not in st.session_state:
+        try:
+            st.session_state.contact_messages=get_contact_func(base_url=base_url)
+        except:
+            st.session_state.contact_messages
+
     if "a" not in st.session_state:
         st.session_state.a=0
         
@@ -78,7 +86,22 @@ if st.session_state.query_parameters == "":
             
         
     with form_submissions:
-        pass
+        for contact_message in st.session_state.contact_messages:
+            try:
+                with st.container(key=contact_message['_id'],border=True):
+                    mail_link = f"mailto:{contact_message['emailAddress']}?subject=Regarding {contact_message['subject']}&body=Dear {contact_message['firstName']},\n\nI hope this message finds you well. I believe you may have sent a contact message through my portfolio. I would appreciate the opportunity to discuss further if you're interested."
+                    st.info(f"This form was sent on  {contact_message['currentDate']}")
+                    st.write(f"First Name: {contact_message['firstName']}")
+                    st.write(f"Last Name: {contact_message['lastName']}")
+                    st.write(f"Subject: {contact_message['subject']}")
+                    st.write(f"Message: {contact_message['message']}")
+                    st.link_button(f"Contact {contact_message['firstName']}",url=mail_link)
+                    if st.button(label=f"Delete message from {contact_message['firstName']}- {contact_message['_id']} ",type='primary'):
+                        delete_contact_func(base_url=base_url,contact_id=contact_message['_id'])
+                        st.toast("Deleted Successfully")
+            except:
+                st.info("No One has submitted anything yet")
+                    
 
 
 
@@ -124,6 +147,11 @@ if st.session_state.query_parameters == "":
     @st.fragment(run_every=10)
     def reset_data():
         response = requests.get(url)
+        form_data=get_contact_func(base_url=base_url)
+        st.session_state.contact_new_messages=form_data
+        if st.session_state.contact_new_messages != st.session_state.contact_messages:
+            st.session_state.contact_messages=form_data
+            st.rerun()
         if response.status_code == 200:
                 data = response.json()
                 data = json.loads(data['projects'])
