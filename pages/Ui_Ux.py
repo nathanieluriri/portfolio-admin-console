@@ -76,7 +76,7 @@ if st.session_state.query_parameters == "":
                 st.write(f"description: {p['description']}")
                 st.link_button("case study Url",url=p['case_study_link'])
                 st.link_button("Image",url=p['case_study_image_link'])
-                if st.button(f"Edit project {p['name']} "):
+                if st.button(f"Edit project {p['name']} {p['_id']} "):
                     st._set_query_params(selected=f"{p['_id']}")
                     st.session_state.a= st.session_state.a+1
                     st.session_state.query_parameters = p['_id']
@@ -120,6 +120,10 @@ if st.session_state.query_parameters == "":
                     result =create_project_func(base_url=base_url,name=st.session_state.name,description=st.session_state.description,case_study_image_link=image_link,case_study_link=st.session_state.case_study)
                     if result==True:
                         st.toast("New project created")
+                        st.session_state.file=None
+                        st.session_state.description=None
+                        st.session_state.case_study=None
+                        st.session_state.name=None
                     else: st.toast(" failed ")
                     
 
@@ -132,7 +136,7 @@ if st.session_state.query_parameters == "":
                 st.write(f"description: {p['description']}")
                 st.link_button("case study Url",url=p['case_study_link'])
                 st.link_button("Image",url=p['case_study_image_link'])
-                if st.button(f"delete {p['name']}",type='primary'):
+                if st.button(f"delete {p['name']} - {p['_id']}",type='primary'):
                     print("sa")
                     pr(base_url,p['_id'])
                     
