@@ -23,8 +23,11 @@ def get_contact_func(base_url):
         res = response.json()
         for r in res.get('messages'):
             r = r.replace("'",'"')
-            message_str= json.loads(r)
-            messages.append(message_str)
+            try:
+                message_str= json.loads(r)
+                messages.append(message_str)
+            except:
+                pass
             
         return messages
     else:
