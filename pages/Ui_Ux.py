@@ -49,7 +49,7 @@ if st.session_state.query_parameters == "":
         try:
             st.session_state.contact_messages=get_contact_func(base_url=base_url)
         except:
-            st.session_state.contact_messages
+            st.session_state.contact_messages=[]
 
     if "a" not in st.session_state:
         st.session_state.a=0
