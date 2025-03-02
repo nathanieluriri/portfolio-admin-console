@@ -45,7 +45,7 @@ if st.session_state.query_parameters == "":
         except:
             st.session_state.project=[]
 
-    if "messages" not in st.session_state:
+    if "contact_messages" not in st.session_state:
         try:
             st.session_state.contact_messages=get_contact_func(base_url=base_url)
         except:
